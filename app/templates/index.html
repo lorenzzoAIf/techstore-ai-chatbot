@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Astra AI — Customer Assistant</title>
+
+    <meta
+        name="description"
+        content="AI customer support assistant for questions, contact collection and appointments."
+    >
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">
+                ✦
+            </div>
+
+            <div>
+                <h1>Astra AI</h1>
+                <span>Customer Assistant</span>
+            </div>
+        </div>
+
+        <div class="business-card">
+            <div class="business-avatar">
+                A
+            </div>
+
+            <div>
+                <strong>Acme Business</strong>
+                <span>AI Support Assistant</span>
+            </div>
+
+            <div class="online-dot"></div>
+        </div>
+
+        <div class="sidebar-section">
+            <span class="section-title">Quick actions</span>
+
+            <button class="quick-action" data-message="What services do you offer?">
+                <span>✦</span>
+                <span>Our services</span>
+            </button>
+
+            <button class="quick-action" data-message="What are your prices?">
+                <span>€</span>
+                <span>Pricing</span>
+            </button>
+
+            <button class="quick-action" data-message="What are your opening hours?">
+                <span>◷</span>
+                <span>Opening hours</span>
+            </button>
+
+            <button class="quick-action" data-action="appointment">
+                <span>▣</span>
+                <span>Book appointment</span>
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="security-badge">
+                <span>✓</span>
+                <div>
+                    <strong>Secure conversation</strong>
+                    <small>Your information is protected</small>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- Main Chat -->
+    <main class="chat-container">
+
+        <!-- Header -->
+        <header class="chat-header">
+
+            <div class="assistant-info">
+
+                <div class="assistant-avatar">
+                    <span>✦</span>
+                    <div class="avatar-status"></div>
+                </div>
+
+                <div>
+                    <h2>Astra AI</h2>
+
+                    <div class="status">
+                        <span class="status-dot"></span>
+                        Online · Usually replies instantly
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="header-button" id="clearChat" title="Clear conversation">
+                ↻
+            </button>
+
+        </header>
+
+
+        <!-- Messages -->
+        <section class="chat-messages" id="chatMessages">
+
+            <div class="welcome-message">
+
+                <div class="welcome-icon">
+                    ✦
+                </div>
+
+                <h3>How can I help you?</h3>
+
+                <p>
+                    Ask me anything about our services, pricing,
+                    opening hours or schedule an appointment.
+                </p>
+
+            </div>
+
+            <div class="message assistant-message">
+
+                <div class="message-avatar">
+                    ✦
+                </div>
+
+                <div class="message-content">
+
+                    <div class="message-name">
+                        Astra AI
+                    </div>
+
+                    <div class="message-bubble">
+                        Hi! 👋 I'm Astra, your AI customer assistant.
+                        How can I help you today?
+                    </div>
+
+                    <div class="message-time">
+                        Just now
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Typing indicator -->
+        <div class="typing-indicator" id="typingIndicator">
+
+            <div class="typing-avatar">
+                ✦
+            </div>
+
+            <div class="typing-bubble">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <span class="typing-text">
+                Astra is typing...
+            </span>
+
+        </div>
+
+
+        <!-- Composer -->
+        <div class="composer-wrapper">
+
+            <div class="suggestions">
+
+                <button class="suggestion" data-message="What services do you offer?">
+                    Services
+                </button>
+
+                <button class="suggestion" data-message="What are your prices?">
+                    Pricing
+                </button>
+
+                <button class="suggestion" data-message="What are your opening hours?">
+                    Hours
+                </button>
+
+                <button class="suggestion" data-action="appointment">
+                    Book a meeting
+                </button>
+
+            </div>
+
+
+            <form class="composer" id="chatForm">
+
+                <textarea
+                    id="messageInput"
+                    rows="1"
+                    maxlength="2000"
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                ></textarea>
+
+                <div class="composer-actions">
+
+                    <span class="character-count" id="characterCount">
+                        0 / 2000
+                    </span>
+
+                    <button
+                        type="submit"
+                        class="send-button"
+                        id="sendButton"
+                        aria-label="Send message"
+                    >
+                        <span>↑</span>
+                    </button>
+
+                </div>
+
+            </form>
+
+            <div class="composer-footer">
+                <span>Powered by Astra AI</span>
+                <span>Press Enter to send · Shift + Enter for a new line</span>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- Appointment Modal -->
+<div class="modal-overlay" id="appointmentModal">
+
+    <div class="appointment-modal">
+
+        <button
+            class="modal-close"
+            id="closeAppointment"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+        <div class="modal-icon">
+            📅
+        </div>
+
+        <h2>Book an appointment</h2>
+
+        <p>
+            Choose a convenient time and leave your contact details.
+        </p>
+
+
+        <form id="appointmentForm">
+
+            <div class="form-group">
+
+                <label for="customerName">
+                    Full name
+                </label>
+
+                <input
+                    id="customerName"
+                    name="name"
+                    type="text"
+                    placeholder="John Smith"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="customerEmail">
+                    Email address
+                </label>
+
+                <input
+                    id="customerEmail"
+                    name="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="customerPhone">
+                    Phone number
+                </label>
+
+                <input
+                    id="customerPhone"
+                    name="phone"
+                    type="tel"
+                    placeholder="+33 6 12 34 56 78"
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="appointmentDate">
+                        Date
+                    </label>
+
+                    <input
+                        id="appointmentDate"
+                        name="date"
+                        type="date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="appointmentTime">
+                        Time
+                    </label>
+
+                    <select
+                        id="appointmentTime"
+                        name="time"
+                        required
+                    >
+
+                        <option value="">
+                            Select time
+                        </option>
+
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="appointmentMessage">
+                    Message <span>(optional)</span>
+                </label>
+
+                <textarea
+                    id="appointmentMessage"
+                    name="message"
+                    rows="3"
+                    placeholder="What would you like to discuss?"
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="appointment-submit"
+            >
+                <span>Confirm appointment</span>
+                <span>→</span>
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
